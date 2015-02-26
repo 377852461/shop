@@ -1,0 +1,27 @@
+*{padding:0px; margin:0px;}
+html {_overflow-y:scroll;}
+/*****！！页面通用css样式定义开始******/
+/* body的css定义:这里定义页面上下左右边距，页面背景颜色，滚动条颜色样式 */
+body{
+    font-family: Arial, Tahoma,"宋体";    /*文字字体定义 */
+	font-size: 12px;    /*文字大小定义 */
+	color: #5a5a5a; /*文字颜色定义 */
+	}
+
+/* 网站超链接css通用设置 */
+a{text-decoration: none;} /* 链接无下划线,有为underline */ 
+a:link {color: #333333;} /* 未访问的链接 */
+a:visited {color: #333333;} /* 已访问的链接 */
+a:hover{color:#333;	text-decoration: none;} /* 鼠标在链接上 */ 
+a:active {color: #333333;} /* 点击激活链接 */
+
+
+h1,h2,h3,h4,h5,h6{font-size:12px;}
+img{border: 0px;}
+.clear{clear:both; line-height:0; height:0; font-size:0px;}
+.clear:after{content: "."; display: block; height: 0; clear: both; visibility: hidden; }/*清除浮动*/
+
+/*表格样式定义 */ 
+checkbox{border: 0px;}/*选择框样式定义 */ 
+table{}
+p{margin:0; padding:0;}/*文字按钮样式定义 */ 

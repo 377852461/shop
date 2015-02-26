@@ -1,0 +1,487 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title>蛐蛐网电商 - Powered By kuanda</title>
+	<meta name="author" content="kuanda Team" />
+	<meta name="copyright" content="kuanda" />
+		<meta name="keywords" content="蛐蛐网电商" />
+		<meta name="description" content="蛐蛐网电商" />
+<link rel="icon" href="/shop/favicon.ico" type="image/x-icon" />
+<link href="/shop/resources/shop/slider/slider.css" rel="stylesheet" type="text/css" />
+<link href="/shop/resources/shop/css/common.css" rel="stylesheet" type="text/css" />
+<link href="/shop/resources/shop/css/index.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/shop/resources/shop/js/jquery.js"></script>
+<script type="text/javascript" src="/shop/resources/shop/js/jquery.tools.js"></script>
+<script type="text/javascript" src="/shop/resources/shop/js/jquery.lazyload.js"></script>
+<script type="text/javascript" src="/shop/resources/shop/slider/slider.js"></script>
+<script type="text/javascript" src="/shop/resources/shop/js/common.js"></script>
+<script type="text/javascript">
+$().ready(function() {
+
+	var $slider = $("#slider");
+	var $newArticleTab = $("#newArticle .tab");
+	var $promotionProductTab = $("#promotionProduct .tab");
+	var $promotionProductInfo = $("#promotionProduct .info");
+	var $hotProductTab = $("#hotProduct .tab");
+	var $newProductTab = $("#newProduct .tab");
+	var $hotProductImage = $("#hotProduct img");
+	var $newProductImage = $("#newProduct img");
+	
+	$slider.nivoSlider({
+		effect: "random",
+		animSpeed: 1000,
+		pauseTime: 6000,
+		controlNav: true,
+		keyboardNav: false,
+		captionOpacity: 0.4
+	});
+	
+	$newArticleTab.tabs("#newArticle .tabContent", {
+		tabs: "li",
+		event: "mouseover",
+		initialIndex: 1
+	});
+	
+	$promotionProductTab.tabs("#promotionProduct .tabContent", {
+		tabs: "li",
+		event: "mouseover"
+	});
+	
+	$hotProductTab.tabs("#hotProduct .tabContent", {
+		tabs: "li",
+		event: "mouseover"
+	});
+	
+	$newProductTab.tabs("#newProduct .tabContent", {
+		tabs: "li",
+		event: "mouseover"
+	});
+	
+	function promotionInfo() {
+		$promotionProductInfo.each(function() {
+			var $this = $(this);
+			var beginDate = $this.attr("beginTimeStamp") != null ? new Date(parseFloat($this.attr("beginTimeStamp"))) : null;
+			var endDate = $this.attr("endTimeStamp") != null ? new Date(parseFloat($this.attr("endTimeStamp"))) : null;
+			if (beginDate == null || beginDate <= new Date()) {
+				if (endDate != null && endDate >= new Date()) {
+					var time = (endDate - new Date()) / 1000;
+					$this.html("剩余时间:<em>" + Math.floor(time / (24 * 3600)) + "<\/em> 天 <em>" + Math.floor((time % (24 * 3600)) / 3600) + "<\/em> 时 <em>" + Math.floor((time % 3600) / 60) + "<\/em> 分");
+				} else if (endDate != null && endDate < new Date()) {
+					$this.html("活动已结束");
+				} else {
+					$this.html("正在进行中...");
+				}
+			}
+		});
+	}
+	
+	promotionInfo();
+	setInterval(promotionInfo, 60 * 1000);
+	
+	$hotProductImage.lazyload({
+		threshold: 100,
+		effect: "fadeIn",
+		skip_invisible: false
+	});
+	
+	$newProductImage.lazyload({
+		threshold: 100,
+		effect: "fadeIn",
+		skip_invisible: false
+	});
+
+});
+</script>
+
+
+
+</head>
+<body>
+<script type="text/javascript">
+$().ready(function() {
+
+	var $headerLogin = $("#headerLogin");
+	var $headerRegister = $("#headerRegister");
+	var $headerFactoryRegister = $("#headerFactoryRegister");
+	var $headerMemberRegister=$("#headerMemberRegister");
+	var $headerUsername = $("#headerUsername");
+	var $headerLogout = $("#headerLogout");
+	var $productSearchForm = $("#productSearchForm");
+	var $keyword = $("#productSearchForm input");
+	var defaultKeyword = "商品搜索";
+	
+	var username = getCookie("username");
+	if (username != null) {
+		$headerUsername.text("您好, " + username).show();
+		$headerLogout.show();
+	} else {
+		removeCookie("defualtHeader",{ expires: -1 }); 
+		$headerLogin.show();
+		//$headerRegister.show();
+		$headerFactoryRegister.show();
+		$headerMemberRegister.show();
+	}
+	
+	/*$("#headerRegistera").live("click",function(){
+		addCookie("defualtHeader", "show", { expires: -1 }); 
+		$headerRegister.hide();
+		$headerFactoryRegister.show();
+		$headerMemberRegister.show();
+	});*/
+	
+	$keyword.focus(function() {
+		if ($keyword.val() == defaultKeyword) {
+			$keyword.val("");
+		}
+	});
+	
+	$keyword.blur(function() {
+		if ($keyword.val() == "") {
+			$keyword.val(defaultKeyword);
+		}
+	});
+	
+	$.ajax({
+		url: "/shop/cart/view_num.jhtml",
+		type: "GET",
+		cache: false,
+		success: function(num) {
+			$(".cart_num").html(num);
+		}
+	});
+	
+	$productSearchForm.submit(function() {
+		if ($.trim($keyword.val()) == "" || $keyword.val() == defaultKeyword) {
+			return false;
+		}
+	});
+
+});
+</script>
+<div class="container header">
+	<div class="span5">
+		<div class="logo">
+			<a href="/shop/">
+				<img src="http://183.247.165.79:88/shop/upload/image/logo.jpg" alt="蛐蛐网电商" />
+			</a>
+		</div>
+	</div>
+	<div class="span9">
+<div class="headerAd">
+	</div>	</div>
+	<div class="span10 last">
+		<div class="topNav clearfix">
+			<ul>
+				<li id="headerLogin" class="headerLogin">
+					<a href="/shop/login.jhtml">登录</a>|
+				</li>
+				<!--<li id="headerRegister" class="headerRegister">
+					<a id="headerRegistera" href="javascript:;">注册</a>|
+				</li>-->
+				<li id="headerMemberRegister" class="headerRegister">
+					<a href="/shop/register.jhtml">会员注册</a>|
+				</li>
+				<li id="headerFactoryRegister" class="headerRegister">
+					<a href="/shop/register_facotry/factory.jhtml">商户注册</a>|
+				</li>
+				<li id="headerUsername" class="headerUsername"></li>
+				<li id="headerLogout" class="headerLogout">
+					<a href="/shop/logout.jhtml">[退出]</a>|
+				</li>
+						<li>
+							<a href="/shop/member/index.jhtml" target="_blank">会员中心</a>
+							|
+						</li>
+						<li>
+							<a href="/shop/article/list/3.jhtml">购物指南</a>
+							|
+						</li>
+						<li>
+							<a href="/shop/article/list/7.jhtml">关于我们</a>
+							
+						</li>
+			</ul>
+		</div>
+		<div class="cart">
+			<a href="/shop/cart/list.jhtml">购物车<span class="cart_num"></span></a>
+		</div>
+			<div class="phone">
+				客服热线:
+				<strong>400-8888888</strong>
+			</div>
+		<div>
+			<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=2457437603&site=qq&menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:2457437603:51" alt="点击这里给我发消息" title="点击这里给我发消息"/></a>
+			<a target="_blank" href="http://www.taobao.com/webww/ww.php?ver=3&touid=feare_ting&siteid=cntaobao&status=1&charset=utf-8"><img border="0" src="http://amos.alicdn.com/online.aw?v=2&uid=feare_ting&site=cntaobao&s=1&charset=utf-8" alt="点这里给我发消息" /></a>
+		</div>
+	</div>
+	<div class="span24">
+		<ul class="mainNav">
+					<li>
+						<a href="/shop/">首页</a>
+						|
+					</li>
+					<li>
+						<a href="/shop/product/list/79.jhtml">羊肉馆</a>
+						|
+					</li>
+					<li>
+						<a href="/shop/product/list/92.jhtml">生活用品</a>
+						|
+					</li>
+					<li>
+						<a href="/shop/product/list/90.jhtml">美妆</a>
+						|
+					</li>
+					<li>
+						<a href="/shop/product/list/88.jhtml">时尚服装</a>
+						|
+					</li>
+					<li>
+						<a href="/shop/product/list/82.jhtml">内衣配饰</a>
+						|
+					</li>
+					<li>
+						<a href="/shop/product/list/100.jhtml">时尚饰品</a>
+						|
+					</li>
+					<li>
+						<a href="/shop/product/group.jhtml">团购</a>
+						|
+					</li>
+					<li>
+						<a href="/shop/">士大夫</a>
+						
+					</li>
+		</ul>
+	</div>
+	<div class="span24">
+		<div class="tagWrap">
+			<ul class="tag">
+						<li>
+							<a href="/shop/product/list.jhtml?tagIds=28">热门</a>
+						</li>
+						<li>
+							<a href="/shop/product/list.jhtml?tagIds=29">团购</a>
+						</li>
+						<li>
+							<a href="/shop/product/list.jhtml?tagIds=27">推荐</a>
+						</li>
+			</ul>
+			<div class="hotSearch">
+					热门搜索:
+						<a href="/shop/product/search.jhtml?keyword=T%E6%81%A4">T恤</a>
+						<a href="/shop/product/search.jhtml?keyword=%E8%A1%AC%E8%A1%AB">衬衫</a>
+						<a href="/shop/product/search.jhtml?keyword=%E8%A5%BF%E6%9C%8D">西服</a>
+						<a href="/shop/product/search.jhtml?keyword=%E8%A5%BF%E8%A3%A4">西裤</a>
+						<a href="/shop/product/search.jhtml?keyword=%E6%A3%AE%E9%A9%AC">森马</a>
+						<a href="/shop/product/search.jhtml?keyword=%E4%B8%83%E5%8C%B9%E7%8B%BC">七匹狼</a>
+						<a href="/shop/product/search.jhtml?keyword=%E6%A2%B5%E5%B8%8C%E8%94%93">梵希蔓</a>
+						<a href="/shop/product/search.jhtml?keyword=%E6%98%A5%E5%A4%8F%E6%96%B0%E6%AC%BE">春夏新款</a>
+						<a href="/shop/product/search.jhtml?keyword=%E7%89%9B%E4%BB%94%E8%A3%A4">牛仔裤</a>
+			</div>
+			<div class="search">
+				<form id="productSearchForm" action="/shop/product/search.jhtml" method="get">
+					<input name="keyword" class="keyword" value="商品搜索" maxlength="30" />
+					<button type="submit">搜索</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>	<div class="container index">
+		<div class="span18">
+<div id="slider" class="slider">
+					<img src="http://183.247.165.79:88/shop/upload/image/201501/e169cf7a-0128-4a9f-a3d2-9b795d887d53.jpg" width="770" height="290" alt="蛐蛐活动" title="蛐蛐活动" />
+				<img src="http://183.247.165.79:88/shop/upload/image/index_2.jpg" width="770" height="290" alt="浪漫时尚季" title="浪漫时尚季" />
+</div>		</div>
+		<div class="span6 last">
+			<div id="newArticle" class="newArticle">
+					<ul class="tab">
+							<li>
+								<a href="/shop/article/list/1.jhtml" target="_blank">商城动态</a>
+							</li>
+							<li>
+								<a href="/shop/article/list/2.jhtml" target="_blank">活动促销</a>
+							</li>
+							<li>
+								<a href="/shop/article/list/3.jhtml" target="_blank">购物指南</a>
+							</li>
+					</ul>
+							<ul class="tabContent">
+									<li>
+										<a href="/shop/article/content/201408/27/1.html" title="五月靓丽女人节 呵护自己" target="_blank">五月靓丽女人节 呵护自己</a>
+									</li>
+									<li>
+										<a href="/shop/article/content/201408/28/1.html" title="电子商务未来是否需要“移动”" target="_blank">电子商务未来是否需要“移动”</a>
+									</li>
+									<li>
+										<a href="/shop/article/content/201408/29/1.html" title="合并运费返还方案公告" target="_blank">合并运费返还方案公告</a>
+									</li>
+									<li>
+										<a href="/shop/article/content/201408/30/1.html" title="电商变革 电商造节促销欲打翻身仗" target="_blank">电商变革 电商造节促销欲打翻身仗</a>
+									</li>
+									<li>
+										<a href="/shop/article/content/201408/31/1.html" title="酷酷搭配逛街去 时尚美范赚足回头率" target="_blank">酷酷搭配逛街去 时尚美范赚足回头</a>
+									</li>
+							</ul>
+							<ul class="tabContent">
+									<li>
+										<a href="/shop/article/content/201408/19/1.html" title="店庆活动 有你更精彩" target="_blank">店庆活动 有你更精彩</a>
+									</li>
+									<li>
+										<a href="/shop/article/content/201408/20/1.html" title="低价一站到底" target="_blank">低价一站到底</a>
+									</li>
+									<li>
+										<a href="/shop/article/content/201408/21/1.html" title="周末耍大牌" target="_blank">周末耍大牌</a>
+									</li>
+									<li>
+										<a href="/shop/article/content/201408/22/1.html" title="箱包百万优惠券大派送" target="_blank">箱包百万优惠券大派送</a>
+									</li>
+									<li>
+										<a href="/shop/article/content/201408/24/1.html" title="欢庆黄金周 10元礼品任你选满百即送！多买多得！" target="_blank">欢庆黄金周 10元礼品任你选满百即</a>
+									</li>
+							</ul>
+							<ul class="tabContent">
+									<li>
+										<a href="/shop/article/content/201408/1/1.html" title="购物流程" target="_blank">购物流程</a>
+									</li>
+									<li>
+										<a href="/shop/article/content/201408/2/1.html" title="会员等级" target="_blank">会员等级</a>
+									</li>
+									<li>
+										<a href="/shop/article/content/201408/3/1.html" title="新用户注册" target="_blank">新用户注册</a>
+									</li>
+									<li>
+										<a href="/shop/article/content/201408/4/1.html" title="预存款支付" target="_blank">预存款支付</a>
+									</li>
+									<li>
+										<a href="/shop/article/content/201408/5/1.html" title="退换货政策" target="_blank">退换货政策</a>
+									</li>
+							</ul>
+			</div>
+<div class="rightAd">
+	</div>		</div>
+
+		<div class="span24" >
+<div class="middleAd">
+	</div>		</div>
+		<div class="span24">
+			<div id="newProduct" class="newProduct clearfix">
+					<a href="/shop/product/list.jhtml?tagIds=28" target="_blank">
+					<div class="title">
+						<strong>热门</strong>
+					</div>
+					</a>
+					<ul class="tab">
+					</ul>
+					<ul class="tabContent">
+					</ul>	
+			</div>			
+		</div>
+		<div class="span24">
+			<div id="hotProduct" class="hotProduct clearfix">
+					<a href="/shop/product/list.jhtml?tagIds=29" target="_blank">
+					<div class="title">
+						<strong>团购</strong>
+					</div>
+					</a>
+					<ul class="tab">
+					</ul>
+					<ul class="tabContent">
+					</ul>	
+			</div>			
+		</div>
+		<div class="span24">
+			<div id="groupon" class="groupon clearfix">
+					<a href="/shop/product/list.jhtml?tagIds=27" target="_blank">
+					<div class="title">
+						<strong>推荐</strong>
+					</div>
+					</a>
+					<ul class="tab">
+					</ul>
+					<ul class="tabContent">
+					</ul>	
+			</div>			
+		</div>
+
+		<div class="span24">
+			<div class="friendLink">
+				<dl>
+					<dt>合作伙伴</dt>
+							<dd>
+								<a href="http://www.alipay.com" target="_blank">支付宝</a>
+								|
+							</dd>
+							<dd>
+								<a href="http://www.tenpay.com" target="_blank">财付通</a>
+								|
+							</dd>
+							<dd>
+								<a href="http://www.chinapay.com" target="_blank">银联在线</a>
+								|
+							</dd>
+							<dd>
+								<a href="http://www.99bill.com" target="_blank">快钱支付</a>
+								|
+							</dd>
+							<dd>
+								<a href="http://down.admin5.com" target="_blank">A5下载</a>
+								|
+							</dd>
+							<dd>
+								<a href="http://www.kuaidi100.com" target="_blank">快递100</a>
+								|
+							</dd>
+							<dd>
+								<a href="http://www.cnzz.com" target="_blank">站长统计</a>
+								
+							</dd>
+					<dd class="more">
+						<a href="/shop/friend_link.jhtml">更多</a>
+					</dd>
+				</dl>
+			</div>
+		</div>
+	</div>
+<div class="container footer">
+	<div class="span24">
+		<div class="footerAd">
+	</div>	</div>
+	<div class="span24">
+		<ul class="bottomNav">
+					<li>
+						<a href="#">关于我们</a>
+						|
+					</li>
+					<li>
+						<a href="#">联系我们</a>
+						|
+					</li>
+					<li>
+						<a href="#">诚聘英才</a>
+						|
+					</li>
+					<li>
+						<a href="#">法律声明</a>
+						|
+					</li>
+					<li>
+						<a href="/shop/friend_link.jhtml">友情链接</a>
+						|
+					</li>
+					<li>
+						<a href="/shop/article/list/4.jhtml" target="_blank">支付方式</a>
+						|
+					</li>
+					<li>
+						<a href="/shop/article/list/5.jhtml" target="_blank">配送方式</a>
+						
+					</li>
+		</ul>
+	</div>
+	<div class="span24">
+		<div class="copyright">Copyright © 2005-2013 蛐蛐网电商 版权所有</div>
+	</div>
+</div></body>
+</html>

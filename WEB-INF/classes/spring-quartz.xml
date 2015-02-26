@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-2.5.xsd
+           http://www.springframework.org/schema/aop 
+           http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+           http://www.springframework.org/schema/tx 
+           http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+	<bean id="scheduleInfoServer" class="net.kuanda.quartz.ScheduleInfoServer">
+		<property name="scheduler" ref="schedulerFactory"/>
+		<property name="grouponService" ref="grouponServiceImpl"/>
+	</bean>
+	<bean id="schedulerJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="scheduleInfoServer"/>
+		<property name="targetMethod" value="reScheduleJob"/>
+		<property name="concurrent" value="false"/>
+	</bean>
+	<bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean" >
+		<property name="jobDetail" ref="schedulerJobDetail"/>
+		<property name="cronExpression">
+			<value>0/10 * * * * ?</value>
+		</property>
+	</bean>
+	<bean id="schedulerFactory" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref local="cronTrigger"/><!--团购定时任务 -->
+				<ref bean="accountTrigger" /><!--中城账户提交定时任务 -->
+			</list>
+		</property>
+	</bean>
+	<bean id="accountTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean" >
+		<property name="jobDetail" ref="accountschedulerJobDetail"/>
+		<property name="cronExpression">
+			<value>* * 0/2 * * ?</value>
+		</property>
+	</bean>
+	<bean id="accountschedulerJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="scheduleInfoServer"/>
+		<property name="targetMethod" value="accountsubmit"/>
+		<property name="concurrent" value="false"/>
+	</bean>
+</beans>
